@@ -36,21 +36,19 @@ finally:
 
 Always call `await bulb.async_close()` in a `finally` block.
 
-## MCP Tools to Implement
-
-The server (in `main.py`) must expose these tools:
+## MCP Tools
 
 | Tool | Description |
 |------|-------------|
 | `check_status` | Connection status, MAC address, on/off state, brightness, color temp, RGB values |
-| `set_scarlet_red` | Set bulb to RGB (255, 39, 0) — see `examples/red.py` |
 | `turn_on` | Turn bulb on |
 | `turn_off` | Turn bulb off |
-| `set_color` | Set color from R, G, B inputs |
-| `adjust_brightness` | Adjust brightness level |
+| `set_warm_white` | Set bulb to warm white (2700 K) — default mode |
+| `set_color` | Set color from R, G, B inputs (0–255 each) |
+| `set_scarlet_red` | Set bulb to RGB (255, 39, 0) — see `examples/red.py` |
+| `adjust_brightness` | Set brightness level (10–255) |
 
 ## Architecture Notes
 
-- **`main.py`**: Entry point and MCP server — currently a stub, needs full implementation.
-- **`examples/`**: Reference implementations using `pywizlight` directly (not MCP). Use these as patterns for bulb interaction logic.
-- **Config**: Bulb IP and any secrets go in `config.md` (not committed — see README reference).
+- **`main.py`**: Entry point and MCP server. All tools are implemented using `FastMCP` from the `mcp` package.
+- **`examples/`**: Standalone reference scripts using `pywizlight` directly (not MCP). Useful for testing bulb logic outside the server.

@@ -24,7 +24,7 @@ async def check_status() -> str:
         brightness = state.get_brightness()
         colortemp = state.get_colortemp()
         rgb = state.get_rgb()
-        mac = state.pilotData.get("mac", "N/A")
+        mac = state.get_mac() or "N/A"
 
         return "\n".join([
             "Connection: Successful",
@@ -89,6 +89,19 @@ async def set_color(r: int, g: int, b: int) -> str:
     try:
         await bulb.turn_on(PilotBuilder(rgb=(r, g, b)))
         return f"Bulb color set to RGB: ({r}, {g}, {b})"
+    except Exception as e:
+        return f"Error: {e}"
+    finally:
+        await bulb.async_close()
+
+
+@mcp.tool()
+async def set_warm_white() -> str:
+    """Set the bulb to warm white mode (2700 K) — the default mode."""
+    bulb = wizlight(BULB_IP)
+    try:
+        await bulb.turn_on(PilotBuilder(colortemp=2700))
+        return "Bulb set to warm white (2700 K)"
     except Exception as e:
         return f"Error: {e}"
     finally:

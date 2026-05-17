@@ -65,6 +65,7 @@ Most MCP clients use the same `command`/`args` config pattern. Point the client 
 | `turn_on` | Turn the bulb on |
 | `turn_off` | Turn the bulb off |
 | `set_color` | Set color by R, G, B values (0–255 each) |
+| `set_warm_white` | Set to warm white (2700 K) — default mode |
 | `set_scarlet_red` | Shortcut to set color to scarlet red (RGB: 255, 39, 0) |
 | `adjust_brightness` | Set brightness level (10–255) |
 
