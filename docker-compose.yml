@@ -1,0 +1,12 @@
+services:
+  wiz-lightbulb-mcp:
+    build: .
+    ports:
+      - "9000:9000"
+    env_file:
+      - .env
+    volumes:
+      # Mounted read-write so the bulb-IP drift fallback in main.py can persist
+      # a new IP back to .env when BULB_IP changes on the network.
+      - ./.env:/app/.env
+    restart: unless-stopped

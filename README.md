@@ -7,6 +7,7 @@ Control a WiZ smart bulb over Wi-Fi via the Model Context Protocol (MCP). WiZ bu
 - Python 3.13+
 - [uv](https://docs.astral.sh/uv/)
 - A WiZ smart bulb on the same local network
+- Docker + Docker Compose (only needed for the HTTP/container deployment below)
 
 ## Setup
 
@@ -55,7 +56,27 @@ Replace `/ABSOLUTE/PATH/TO/wiz_lightbulb_mcp` with the actual path to this repo.
 
 ### Hermes AI (and other MCP clients)
 
-Most MCP clients use the same `command`/`args` config pattern. Point the client at the `uv run python main.py` command from the project directory. Check your client's documentation for where to place the config and the exact format.
+If your MCP client runs locally (same machine, not in a container), most clients use the same `command`/`args` config pattern as Claude Desktop above.
+
+If your client runs in its own Docker container (e.g. Hermes), run this server over HTTP in a container as well — see [Running over HTTP (Docker)](#running-over-http-docker) below — and point the client at:
+
+```
+http://host.docker.internal:9000/mcp
+```
+
+## Running over HTTP (Docker)
+
+For clients that can't spawn a local process (e.g. Hermes running in its own container), the server can run as an HTTP MCP endpoint in Docker instead of stdio.
+
+```bash
+docker-compose up -d --build   # build and run on http://0.0.0.0:9000/mcp
+docker-compose logs -f         # tail logs
+docker-compose down            # stop
+```
+
+`docker-compose.yml` publishes port 9000 and mounts `.env` read-write (so the bulb-IP drift fallback can update it if the bulb gets a new DHCP lease). No `.env` values need to change — the container reaches the bulb over plain UDP through Docker's default network.
+
+To use a different port, set `MCP_PORT` in `.env` and update the `ports` mapping in `docker-compose.yml` to match.
 
 ## Available Tools
 
